@@ -3,10 +3,16 @@ import { defineConfig } from '@umijs/max';
 import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-
 import routes from './routes';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
+
+/**
+ * @name 使用公共路径
+ * @description 部署时的路径，如果部署在非根目录下，需要配置这个变量
+ * @doc https://umijs.org/docs/api/config#publicpath
+ */
+const PUBLIC_PATH: string = '/';
 
 export default defineConfig({
   /**
@@ -15,6 +21,8 @@ export default defineConfig({
    * @doc https://umijs.org/docs/api/config#hash
    */
   hash: true,
+
+  publicPath: PUBLIC_PATH,
 
   /**
    * @name 兼容性设置
@@ -126,7 +134,7 @@ export default defineConfig({
    */
   headScripts: [
     // 解决首次加载时白屏的问题
-    { src: '/scripts/loading.js', async: true },
+    { src: join(PUBLIC_PATH, 'scripts/loading.js'), async: true },
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
@@ -149,9 +157,6 @@ export default defineConfig({
       projectName: 'swagger',
     },
   ],
-  mock: {
-    include: ['mock/**/*', 'src/pages/**/_mock.ts'],
-  },
   mfsu: {
     strategy: 'normal',
   },
