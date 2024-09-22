@@ -2,8 +2,20 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+import { Login, GetCurrentUser, GetRule } from "../../../wailsjs/go/main/App";
+import { main } from "../../../wailsjs/go/models";
+
+let useLocal = true;
+
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
+  if(useLocal){
+    let m = await GetCurrentUser();
+    console.log("GetCurrentUser:");
+    console.log(m);
+    return m;
+  }
+
   return request<{
     data: API.CurrentUser;
   }>('/api/currentUser', {
@@ -22,6 +34,11 @@ export async function outLogin(options?: { [key: string]: any }) {
 
 /** 登录接口 POST /api/login/account */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
+  if(useLocal){
+    let input = new main.LoginInput(body);
+    return Login(input);
+  }
+
   return request<API.LoginResult>('/api/login/account', {
     method: 'POST',
     headers: {
@@ -51,6 +68,14 @@ export async function rule(
   },
   options?: { [key: string]: any },
 ) {
+
+  if(useLocal){
+    let m = await GetRule(params.current === undefined? 1: params.current , params.pageSize === undefined ? 10 : params.pageSize);
+    console.log("GetRule:");
+    console.log(m);
+    return m;
+  }
+
   return request<API.RuleList>('/api/rule', {
     method: 'GET',
     params: {

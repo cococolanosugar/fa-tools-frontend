@@ -117,9 +117,9 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      let m = await Greet('a002');
-      alert(m);
-      console.log(m);
+      // let m = await Greet('a002');
+      // alert(m);
+      // console.log(m);
       // 登录
       const msg = await login({ ...values, type });
       if (msg.status === 'ok') {
